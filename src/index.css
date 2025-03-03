@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light mode styles */
+body {
+    @apply bg-white text-black;
+}
+
+/* Dark mode styles */
+body.dark {
+    @apply bg-gray-900 text-white;
+}
