@@ -69,7 +69,3 @@ Make sure you have the following installed:
 - Add features to bookmark and save articles for later reading.
 - Introduce dark mode support for better accessibility.
 
-## Live Demo
-Explore the live demo of the application:
-🔹 **[Live News App](https://project-iii-nexus-logic-technologies.vercel.app/)**
-(Note: Data fetching may be limited due to API_KEY restrictions.)
