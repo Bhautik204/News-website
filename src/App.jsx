@@ -1,27 +1,72 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useState, useEffect } from 'react';
 import Header from "./Components/Header";
-import TopHeadlines from "./Pages/TopHeadlines";
-import BreakingNews from "./Pages/BreakingNews";
-import Category from "./Pages/Category";
 import Footer from "./Components/Footer";
-import SearchNews from "./Pages/SearchNews";
+import CategoryFilter from './Components/CategoryFilter';
+import NewsGrid from './Components/NewsGrid';
+import { getTopHeadlines, searchNews } from './services/newsService';
+import { ThemeProvider } from './context/ThemeContext';
 
 const App = () => {
+  const [activeCategory, setActiveCategory] = useState('general');
+  const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchNews = async (category) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const news = await getTopHeadlines(category);
+      setArticles(news);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSearch = async (query) => {
+    if (!query.trim()) {
+      fetchNews(activeCategory);
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      const results = await searchNews(query);
+      setArticles(results);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNews(activeCategory);
+  }, [activeCategory]);
+
   return (
-    <Router>
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<TopHeadlines />} />
-            <Route path="/breaking-news" element={<BreakingNews />} />
-            <Route path="/category" element={<Category />} />
-            <Route path="/search" element={<SearchNews />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col transition-colors duration-200">
+          <Header onSearch={handleSearch} />
+          <main className="flex-grow">
+            <CategoryFilter
+              activeCategory={activeCategory}
+              onCategoryChange={setActiveCategory}
+            />
+            <NewsGrid
+              articles={articles}
+              isLoading={isLoading}
+              error={error}
+            />
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 };
 

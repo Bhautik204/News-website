@@ -1,47 +1,58 @@
 import React from 'react';
+import { FiClock, FiExternalLink } from 'react-icons/fi';
 
-function NewsCard({ author, title, description, url, urlToImage, publishedAt, content }) {
+const NewsCard = ({ article }) => {
     const formatDate = (dateString) => {
-        if (!dateString) return "Unknown date";
         const date = new Date(dateString);
-        return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
     };
 
     return (
-        <div className="bg-white rounded-lg overflow-hidden shadow-lg border border-purple-200 transition-all duration-300 hover:shadow-xl hover:border-purple-300 h-full flex flex-col">
-            {/* Image */}
-            <div className="relative h-48 overflow-hidden bg-purple-100">
+        <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-colors duration-200 hover:shadow-lg">
+            <div className="relative aspect-video">
                 <img
-                    src={urlToImage}
-                    alt={title}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    src={article.urlToImage || 'https://via.placeholder.com/400x225?text=No+Image'}
+                    alt={article.title}
+                    className="w-full h-full object-cover"
                     onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/300x200?text=News";
+                        e.target.src = 'https://via.placeholder.com/400x225?text=No+Image';
                     }}
                 />
-                <div className="absolute bottom-0 left-0 bg-purple-700 text-white px-2 py-1 text-xs">
-                    {formatDate(publishedAt)}
-                </div>
+                {article.source && (
+                    <span className="absolute top-2 left-2 px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded-full">
+                        {article.source.name}
+                    </span>
+                )}
             </div>
-
-            {/* Content */}
-            <div className="p-4 flex-grow flex flex-col">
-                <h2 className="text-lg font-bold text-purple-900 mb-2 line-clamp-2">{title}</h2>
-                <p className="text-sm text-gray-600 mb-2">By {author}</p>
-                <p className="text-gray-700 mb-4 line-clamp-3">{description}</p>
-                <div className="mt-auto">
+            <div className="p-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                    {article.title}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">
+                    {article.description}
+                </p>
+                <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center text-gray-500 dark:text-gray-400">
+                        <FiClock className="w-4 h-4 mr-1" />
+                        <span>{formatDate(article.publishedAt)}</span>
+                    </div>
                     <a
-                        href={url}
+                        href={article.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300"
+                        className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200"
                     >
                         Read More
+                        <FiExternalLink className="w-4 h-4 ml-1" />
                     </a>
                 </div>
             </div>
-        </div>
+        </article>
     );
-}
+};
 
 export default NewsCard;
