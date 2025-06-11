@@ -2,7 +2,6 @@
 
 A modern, responsive news application built with React and Tailwind CSS that provides real-time news updates with a beautiful user interface.
 
-![NewsHub Screenshot](public/screenshot.png)
 
 ## Features
 
