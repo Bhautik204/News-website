@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_KEY = '75dd01700c9a49519d16f34f1b4aa9be';
+const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 const BASE_URL = 'https://newsapi.org/v2';
 
 const newsApi = axios.create({
@@ -9,6 +9,7 @@ const newsApi = axios.create({
     'X-Api-Key': API_KEY
   }
 });
+
 
 export const getTopHeadlines = async (category = 'general', country = 'us') => {
   try {
